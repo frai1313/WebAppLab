@@ -9,7 +9,7 @@ import java.util.List;
 public class PiattoProxy extends Piatto {
     public List<Ristorante> getRistoranti() {
         if(this.ristoranti==null){
-            this.ristoranti= DBManager.getInstance().getRistoranteDao().findRistorantiByPiattoNome(this.nome);
+            this.ristoranti= DBManager.getInstance().getRistoranteDao().findRistorantiByPiattoName(this.nome);
         }
         return ristoranti;
     }

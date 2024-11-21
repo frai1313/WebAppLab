@@ -29,10 +29,8 @@ public class PiattoDaoJDBC implements PiattoDao {
             ResultSet rs = st.executeQuery(query);
             while (rs.next()){
                 Piatto piatto = new Piatto();
-
                 piatto.setNome(rs.getString("nome"));
                 piatto.setIngredienti(rs.getString("ingredienti"));
-
                 piatti.add(piatto);
             }
         } catch (SQLException e) {
@@ -57,16 +55,20 @@ public class PiattoDaoJDBC implements PiattoDao {
         return null;
     }
 
-
+    @Override
+    public void create(Piatto piatto) {
+        String query = "INSERT INTO piatto (nome, ingredienti) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, piatto.getNome());
+            stmt.setString(2, piatto.getIngredienti());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void save(Piatto piatto) {
-
-        /*
-        INSERT INTO t VALUES (1,'foo updated'),(3,'new record')
-ON CONFLICT (id) DO UPDATE SET txt = EXCLUDED.txt;
-         */
-
 
         String query = "INSERT INTO piatto (nome, ingredienti) VALUES (?, ?) " +
                 "ON CONFLICT (nome) DO UPDATE SET ingredienti = EXCLUDED.ingredienti";
@@ -81,7 +83,13 @@ ON CONFLICT (id) DO UPDATE SET txt = EXCLUDED.txt;
 
     @Override
     public void delete(Piatto piatto) {
-
+        String query = "DELETE FROM piatto WHERE nome = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, piatto.getNome());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
